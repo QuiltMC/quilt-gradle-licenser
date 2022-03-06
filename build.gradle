@@ -1,7 +1,7 @@
 plugins {
 	id 'java-gradle-plugin'
 	id 'maven-publish'
-	//id 'org.quiltmc.gradle.licenser' version '1.0.0'
+//	id 'org.quiltmc.gradle.licenser' version '1.0.0'
 }
 
 group = "org.quiltmc"

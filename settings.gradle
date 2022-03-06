@@ -1,7 +1,10 @@
 pluginManagement {
 	repositories {
 		mavenCentral()
-		mavenLocal()
+		maven {
+			name 'Quilt'
+			url 'https://maven.quiltmc.org/repository/release'
+		}
 	}
 }
 
