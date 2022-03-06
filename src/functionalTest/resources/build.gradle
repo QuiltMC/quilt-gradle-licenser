@@ -1,0 +1,9 @@
+plugins {
+	id 'org.quiltmc.gradle.licenser'
+	id 'java'
+}
+
+license {
+	rule rootProject.file("HEADER")
+	include "**/*.java"
+}

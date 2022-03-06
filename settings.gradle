@@ -1,0 +1,21 @@
+pluginManagement {
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
+}
+
+rootProject.name = 'quilt-gradle-licenser'
+
+dependencyResolutionManagement {
+	versionCatalogs {
+		libs {
+			library('jetbrains-annotations', 'org.jetbrains', 'annotations').version('23.0.0')
+
+			def jgit_core = 'org.eclipse.jgit'
+			library('jgit', jgit_core, jgit_core).version('6.0.0.202111291000-r')
+
+			library('junit', 'org.junit.jupiter', 'junit-jupiter').version('5.8.2')
+		}
+	}
+}

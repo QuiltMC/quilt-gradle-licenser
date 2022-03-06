@@ -1,0 +1,93 @@
+plugins {
+	id 'java-gradle-plugin'
+	id 'maven-publish'
+	//id 'org.quiltmc.gradle.licenser' version '1.0.0'
+}
+
+group = "org.quiltmc"
+version = "1.0.0"
+def javaVersion = 17
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	api libs.jetbrains.annotations
+	api libs.jgit
+	// Use JUnit Jupiter for testing.
+	testImplementation libs.junit
+}
+
+gradlePlugin {
+	// Define the plugin
+	plugins {
+		quilt_gradle_licenser {
+			id = 'org.quiltmc.gradle.licenser'
+			implementationClass = 'org.quiltmc.gradle.licenser.QuiltLicenserGradlePlugin'
+		}
+	}
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(javaVersion)
+	targetCompatibility = JavaVersion.toVersion(javaVersion)
+
+	withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	it.options.deprecation(true)
+
+	it.options.release.set(javaVersion)
+}
+
+//license {
+//	include "**/*.java"
+//	rule file("codeformat/HEADER")
+//}
+
+// Add a source set for the functional test suite
+sourceSets {
+	functionalTest
+}
+
+configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+
+// Add a task to run the functional tests
+tasks.register('functionalTest', Test) {
+	testClassesDirs = sourceSets.functionalTest.output.classesDirs
+	classpath = sourceSets.functionalTest.runtimeClasspath
+	useJUnitPlatform()
+
+	group("verification")
+}
+
+gradlePlugin.testSourceSets(sourceSets.functionalTest)
+
+tasks.named('check') {
+	// Run the functional tests as part of `check`
+	dependsOn(tasks.functionalTest)
+}
+
+tasks.named('test') {
+	// Use JUnit Jupiter for unit tests.
+	useJUnitPlatform()
+}
+
+publishing {
+	repositories {
+		mavenLocal()
+		if (System.getenv("MAVEN_URL") != null) {
+			maven {
+				setUrl(System.getenv("MAVEN_URL"))
+				credentials {
+					username = System.getenv("MAVEN_USERNAME")
+					password = System.getenv("MAVEN_PASSWORD")
+				}
+				name = "Maven"
+			}
+		}
+	}
+}
