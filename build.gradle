@@ -1,7 +1,7 @@
 plugins {
 	id 'java-gradle-plugin'
 	id 'maven-publish'
-//	id 'org.quiltmc.gradle.licenser' version '1.0.0'
+	id 'org.quiltmc.gradle.licenser' version '1.0.0'
 }
 
 group = "org.quiltmc"
@@ -43,10 +43,10 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release.set(javaVersion)
 }
 
-//license {
-//	include "**/*.java"
-//	rule file("codeformat/HEADER")
-//}
+license {
+	include "**/*.java"
+	rule file("codeformat/HEADER")
+}
 
 // Add a source set for the functional test suite
 sourceSets {
