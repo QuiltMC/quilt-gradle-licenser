@@ -173,7 +173,7 @@ public class LicenseRule {
 		String yearValue = null;
 
 		if (matcher.find()) {
-			if (matcher.groupCount() > 1) {
+			if (matcher.groupCount() >= 1) {
 				yearValue = matcher.group(1);
 			}
 		}
