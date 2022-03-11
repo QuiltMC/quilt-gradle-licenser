@@ -20,26 +20,24 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.JavaPluginExtension;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.util.PatternFilterable;
 
 import java.nio.file.Path;
 
 public abstract class JavaSourceBasedTask extends DefaultTask {
+	protected final SourceSet sourceSet;
 	protected final PatternFilterable patternFilterable;
 
-	protected JavaSourceBasedTask(PatternFilterable patternFilterable) {
+	protected JavaSourceBasedTask(SourceSet sourceSet, PatternFilterable patternFilterable) {
+		this.sourceSet = sourceSet;
 		this.patternFilterable = patternFilterable;
 	}
 
 	protected void execute(JavaSourceConsumer consumer) {
-		var javaConvention = this.getProject().getExtensions()
-				.getByType(JavaPluginExtension.class);
-
-		for (var sourceSet : javaConvention.getSourceSets()) {
-			for (var javaDir : sourceSet.getAllJava().matching(this.patternFilterable)) {
-				Path sourcePath = javaDir.toPath();
-				consumer.consume(this.getProject(), this.getProject().getProjectDir().toPath(), sourcePath);
-			}
+		for (var javaDir : this.sourceSet.getAllJava().matching(this.patternFilterable)) {
+			Path sourcePath = javaDir.toPath();
+			consumer.consume(this.getProject(), this.getProject().getProjectDir().toPath(), sourcePath);
 		}
 
 		consumer.end(this.getLogger());

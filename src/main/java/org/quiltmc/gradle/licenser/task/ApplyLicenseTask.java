@@ -18,6 +18,7 @@ package org.quiltmc.gradle.licenser.task;
 
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.TaskAction;
 import org.quiltmc.gradle.licenser.api.license.LicenseHeader;
 import org.quiltmc.gradle.licenser.extension.QuiltLicenserGradleExtension;
@@ -31,10 +32,10 @@ public class ApplyLicenseTask extends JavaSourceBasedTask {
 	private final LicenseHeader licenseHeader;
 
 	@Inject
-	public ApplyLicenseTask(QuiltLicenserGradleExtension extension) {
-		super(extension.asPatternFilterable());
+	public ApplyLicenseTask(SourceSet sourceSet, QuiltLicenserGradleExtension extension) {
+		super(sourceSet, extension.asPatternFilterable());
 		this.licenseHeader = extension.getLicenseHeader();
-		this.setDescription("Apply the correct license headers to source files.");
+		this.setDescription("Applies the correct license headers to source files in the " + sourceSet.getName() + " source set.");
 		this.setGroup("generation");
 
 		if (!this.licenseHeader.isValid()) {

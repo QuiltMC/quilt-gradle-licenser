@@ -73,8 +73,8 @@ class QuiltGradleLicenserPluginFunctionalTest {
 		BuildResult result = runner.build();
 
 		// Verify the result
-		assertTrue(result.getOutput().contains("- Updated file " + testClassPath));
-		assertTrue(result.getOutput().contains("Updated 1 out of 1 files."));
+		assertTrue(result.getOutput().contains("- Updated file " + testClassPath), "Missing updated file string in output log.");
+		assertTrue(result.getOutput().contains("Updated 1 out of 1 files."), "Missing update status string in output log.");
 
 		assertTrue(Files.readString(testClassPath).contains("Licensed under the Apache License, Version 2.0 (the \"License\");"));
 

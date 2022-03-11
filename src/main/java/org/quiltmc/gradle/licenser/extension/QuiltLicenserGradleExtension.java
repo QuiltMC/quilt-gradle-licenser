@@ -22,6 +22,7 @@ import groovy.transform.PackageScope;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileTreeElement;
 import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.provider.Property;
 import org.gradle.api.resources.TextResourceFactory;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.util.PatternFilterable;
@@ -49,6 +50,9 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 	final LicenseHeader header = new LicenseHeader(new ArrayList<>());
 	@PackageScope
 	final TextResourceFactory textResources;
+
+	@PackageScope
+	Property<Boolean> buildDependCheck;
 
 	@Inject
 	public QuiltLicenserGradleExtension(final ObjectFactory objects, final Project project) {
