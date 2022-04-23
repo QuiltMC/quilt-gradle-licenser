@@ -19,6 +19,7 @@ package org.quiltmc.gradle.licenser.api.license;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.gradle.licenser.QuiltLicenserGradlePlugin;
 import org.quiltmc.gradle.licenser.impl.LicenseUtils;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.util.regex.Pattern;
  * Represents a license header rule, it describes one valid license header format.
  *
  * @author LambdAurora
- * @version 1.0.0
+ * @version 1.1.1
  * @since 1.0.0
  */
 public class LicenseRule {
@@ -108,6 +109,10 @@ public class LicenseRule {
 		String source = LicenseUtils.readFile(path);
 		String year = this.getYearString(project, path, source);
 
+		if (QuiltLicenserGradlePlugin.DEBUG_MODE) {
+			project.getLogger().lifecycle("  => Selected \"{}\" as the year string.", year);
+		}
+
 		int delimiter = source.indexOf("package");
 		if (delimiter != -1) {
 			// @TODO have a way to specify custom variables?
@@ -170,14 +175,35 @@ public class LicenseRule {
 		int lastModifiedYear = this.yearSelectionMode.getYear(project, sourcePath);
 		var matcher = this.validator.matcher(source);
 
+		if (QuiltLicenserGradlePlugin.DEBUG_MODE) {
+			project.getLogger().lifecycle("  => Found last modification year {}", lastModifiedYear);
+		}
+
 		String yearValue = null;
 
 		if (matcher.find()) {
 			if (matcher.groupCount() >= 1) {
 				yearValue = matcher.group(1);
+
+				if (QuiltLicenserGradlePlugin.DEBUG_MODE) {
+					project.getLogger().lifecycle("  => Found current year value in file: \"{}\"", yearValue);
+				}
 			}
+		} else if (QuiltLicenserGradlePlugin.DEBUG_MODE) {
+			project.getLogger().lifecycle("  => Could not find current year value in file.");
 		}
 
 		return this.yearDisplayMode.getYearString(yearValue, lastModifiedYear);
+	}
+
+	@Override
+	public String toString() {
+		return "LicenseRule{" +
+				"headerFormat=" + this.headerFormat +
+				", validator=" + this.validator +
+				", matcher=" + this.matcher +
+				", yearDisplayMode=" + this.yearDisplayMode +
+				", yearSelectionMode=" + this.yearSelectionMode +
+				'}';
 	}
 }

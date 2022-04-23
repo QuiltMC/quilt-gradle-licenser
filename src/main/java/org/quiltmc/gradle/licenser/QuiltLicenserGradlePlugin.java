@@ -37,6 +37,12 @@ public class QuiltLicenserGradlePlugin implements Plugin<Project> {
 	public static final String CHECK_TASK_PREFIX = "check";
 	public static final String APPLY_TASK_PREFIX = "apply";
 
+	private static final String DEBUG_MODE_PROPERTY = "quilt.gradle.licenser.debug";
+	/**
+	 * Represents whether the debug mode is enabled or not using the {@value #DEBUG_MODE_PROPERTY} system property.
+	 */
+	public static final boolean DEBUG_MODE = Boolean.getBoolean(DEBUG_MODE_PROPERTY);
+
 	@Override
 	public void apply(Project project) {
 		var ext = project.getExtensions().create("license", QuiltLicenserGradleExtension.class, project);

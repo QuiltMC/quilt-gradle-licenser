@@ -17,6 +17,7 @@
 package org.quiltmc.gradle.licenser.api.license;
 
 import org.gradle.api.Project;
+import org.quiltmc.gradle.licenser.QuiltLicenserGradlePlugin;
 import org.quiltmc.gradle.licenser.impl.LicenseUtils;
 
 import java.nio.file.Path;
@@ -27,7 +28,7 @@ import java.util.List;
  * Represents a license header.
  *
  * @author LambdAurora
- * @version 1.0.0
+ * @version 1.1.1
  * @since 1.0.0
  */
 public final class LicenseHeader {
@@ -87,6 +88,10 @@ public final class LicenseHeader {
 
 		for (var rule : this.rules) {
 			if (rule.match(source)) {
+				if (QuiltLicenserGradlePlugin.DEBUG_MODE) {
+					project.getLogger().lifecycle("  => Matched rule {}", rule);
+				}
+
 				return rule.formatFile(project, rootPath, path);
 			}
 		}

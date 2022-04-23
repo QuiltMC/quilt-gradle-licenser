@@ -19,12 +19,13 @@ package org.quiltmc.gradle.licenser.task;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
-import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.util.PatternFilterable;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.nio.file.Path;
 
+@ApiStatus.Internal
 public abstract class JavaSourceBasedTask extends DefaultTask {
 	protected final SourceSet sourceSet;
 	protected final PatternFilterable patternFilterable;
@@ -37,14 +38,14 @@ public abstract class JavaSourceBasedTask extends DefaultTask {
 	protected void execute(JavaSourceConsumer consumer) {
 		for (var javaDir : this.sourceSet.getAllJava().matching(this.patternFilterable)) {
 			Path sourcePath = javaDir.toPath();
-			consumer.consume(this.getProject(), this.getProject().getProjectDir().toPath(), sourcePath);
+			consumer.consume(this.getProject(), this.getLogger(), this.getProject().getProjectDir().toPath(), sourcePath);
 		}
 
 		consumer.end(this.getLogger());
 	}
 
 	public interface JavaSourceConsumer {
-		void consume(Project project, Path sourceSetPath, Path path);
+		void consume(Project project, Logger logger, Path sourceSetPath, Path path);
 
 		void end(Logger logger);
 	}

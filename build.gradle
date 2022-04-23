@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.quiltmc"
-version = "1.1.0"
+version = "1.1.1"
 def javaVersion = 17
 
 repositories {
@@ -60,6 +60,7 @@ tasks.register('functionalTest', Test) {
 	testClassesDirs = sourceSets.functionalTest.output.classesDirs
 	classpath = sourceSets.functionalTest.runtimeClasspath
 	useJUnitPlatform()
+	systemProperty "quilt.gradle.licenser.debug", System.getProperty("quilt.gradle.licenser.debug")
 
 	group("verification")
 }
@@ -74,6 +75,7 @@ tasks.named('check') {
 tasks.named('test') {
 	// Use JUnit Jupiter for unit tests.
 	useJUnitPlatform()
+	systemProperty "quilt.gradle.licenser.debug", System.getProperty("quilt.gradle.licenser.debug")
 }
 
 publishing {

@@ -20,6 +20,8 @@ import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.TaskAction;
+import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.gradle.licenser.QuiltLicenserGradlePlugin;
 import org.quiltmc.gradle.licenser.api.license.LicenseHeader;
 import org.quiltmc.gradle.licenser.extension.QuiltLicenserGradleExtension;
 
@@ -28,6 +30,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiStatus.Internal
 public class ApplyLicenseTask extends JavaSourceBasedTask {
 	private final LicenseHeader licenseHeader;
 
@@ -58,7 +61,11 @@ public class ApplyLicenseTask extends JavaSourceBasedTask {
 		}
 
 		@Override
-		public void consume(Project project, Path rootPath, Path path) {
+		public void consume(Project project, Logger logger, Path rootPath, Path path) {
+			if (QuiltLicenserGradlePlugin.DEBUG_MODE) {
+				logger.lifecycle("=> Visiting {}...", path);
+			}
+
 			if (this.licenseHeader.format(project, rootPath, path)) {
 				this.updatedFiles.add(path);
 			}

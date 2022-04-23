@@ -21,6 +21,7 @@ import org.gradle.api.Project;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.TaskAction;
+import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.gradle.licenser.api.license.LicenseHeader;
 import org.quiltmc.gradle.licenser.extension.QuiltLicenserGradleExtension;
 
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiStatus.Internal
 public class CheckLicenseTask extends JavaSourceBasedTask {
 	private final LicenseHeader licenseHeader;
 
@@ -59,7 +61,7 @@ public class CheckLicenseTask extends JavaSourceBasedTask {
 		}
 
 		@Override
-		public void consume(Project project, Path sourceSetPath, Path path) {
+		public void consume(Project project, Logger logger, Path sourceSetPath, Path path) {
 			if (!this.licenseHeader.validate(path)) {
 				this.failedChecks.add(path);
 			}
