@@ -36,7 +36,7 @@ public abstract class JavaSourceBasedTask extends DefaultTask {
 	}
 
 	protected void execute(JavaSourceConsumer consumer) {
-		for (var javaDir : this.sourceSet.getAllJava().matching(this.patternFilterable)) {
+		for (var javaDir : this.sourceSet.getAllSource().matching(this.patternFilterable)) {
 			Path sourcePath = javaDir.toPath();
 			consumer.consume(this.getProject(), this.getLogger(), this.getProject().getProjectDir().toPath(), sourcePath);
 		}
