@@ -114,6 +114,9 @@ public class LicenseRule {
 		}
 
 		int delimiter = source.indexOf("package");
+		if (path.toString().endsWith(".kt")) {
+			delimiter = source.substring(0, delimiter).contains("@file") ? source.indexOf("@file") : source.indexOf("class");
+		}
 		if (delimiter != -1) {
 			// @TODO have a way to specify custom variables?
 			var map = new HashMap<String, String>();
