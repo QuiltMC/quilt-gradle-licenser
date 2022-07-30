@@ -10,7 +10,7 @@ For a project you need to apply the plugin to your project:
 
 ```groovy
 plugins {
-	id 'org.quiltmc.gradle.licenser' version '1.0.+'
+	id 'org.quiltmc.gradle.licenser' version '1.+'
 }
 ```
 
