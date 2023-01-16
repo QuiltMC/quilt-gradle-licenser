@@ -25,6 +25,7 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 import org.gradle.api.resources.TextResourceFactory;
 import org.gradle.api.specs.Spec;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.util.PatternFilterable;
 import org.gradle.api.tasks.util.PatternSet;
 import org.jetbrains.annotations.NotNull;
@@ -192,6 +193,11 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 	@Override
 	public @NotNull QuiltLicenserGradleExtension exclude(@NotNull Closure closure) {
 		this.patternFilterable.exclude(closure);
+		return this;
+	}
+
+	public @NotNull QuiltLicenserGradleExtension exclude(@NotNull SourceSet sourceSet) {
+		this.patternFilterable.exclude(t -> sourceSet.getJava().getSrcDirs().contains(t.getFile().getParentFile()));
 		return this;
 	}
 }
