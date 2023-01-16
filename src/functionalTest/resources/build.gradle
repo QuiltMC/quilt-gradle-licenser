@@ -6,4 +6,5 @@ plugins {
 license {
 	rule rootProject.file("HEADER")
 	include "**/*.java"
+	include "**/*.kt"
 }

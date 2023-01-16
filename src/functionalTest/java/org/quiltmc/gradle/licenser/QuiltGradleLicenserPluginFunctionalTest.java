@@ -61,6 +61,7 @@ class QuiltGradleLicenserPluginFunctionalTest {
 		this.writeString(this.getSettingsFile(), "");
 		copy("build.gradle");
 		Path testClassPath = copy("src/main/java/test/TestClass.java");
+		Path testKotlinFilePath = copy("src/main/java/test/TestKotlinFile.kt");
 
 		Files.copy(Paths.get("codeformat", "HEADER"), this.path("HEADER"));
 
@@ -74,9 +75,14 @@ class QuiltGradleLicenserPluginFunctionalTest {
 
 		// Verify the result
 		assertTrue(result.getOutput().contains("- Updated file " + testClassPath), "Missing updated file string in output log.");
-		assertTrue(result.getOutput().contains("Updated 1 out of 1 files."), "Missing update status string in output log.");
-
 		assertTrue(Files.readString(testClassPath).contains("Licensed under the Apache License, Version 2.0 (the \"License\");"));
+
+		assertTrue(result.getOutput().contains("- Updated file " + testKotlinFilePath), "Missing updated file string in output log.");
+		assertTrue(Files.readString(testKotlinFilePath).contains("Licensed under the Apache License, Version 2.0 (the \"License\");"));
+		assertTrue(Files.readString(testKotlinFilePath).contains("@file:JvmName(\"TestKotlinFile\")"));
+
+		assertTrue(result.getOutput().contains("Updated 2 out of 2 files."), "Missing update status string in output log.");
+
 
 		runner = GradleRunner.create();
 		runner.forwardOutput();
