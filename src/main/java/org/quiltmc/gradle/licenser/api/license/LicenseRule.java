@@ -113,12 +113,27 @@ public class LicenseRule {
 			project.getLogger().lifecycle("  => Selected \"{}\" as the year string.", year);
 		}
 
-		int delimiter = source.indexOf("package");
-		if (delimiter != -1) {
+		String[] lines = source.split("\n");
+		int beginningLine = -1;
+		int beginningCharacter = 0;
+		for (int i = 0; i < lines.length; i++) {
+			if (lines[i].startsWith("package ")) {
+				beginningLine = i;
+				break;
+			}
+
+			if (path.toString().endsWith(".kt") && lines[i].startsWith("@file:")) {
+				beginningLine = i;
+				break;
+			}
+
+			beginningCharacter += lines[i].length() + 1;
+		}
+		if (beginningLine != -1) {
 			// @TODO have a way to specify custom variables?
 			var map = new HashMap<String, String>();
 			map.put(LicenseHeader.YEAR_KEY, year);
-			var newSource = this.getLicenseString(map) + source.substring(delimiter);
+			var newSource = this.getLicenseString(map) + source.substring(beginningCharacter);
 
 			if (newSource.equals(source)) {
 				return false;

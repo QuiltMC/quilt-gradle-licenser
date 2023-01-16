@@ -45,6 +45,7 @@ tasks.withType(JavaCompile).configureEach {
 
 license {
 	include "**/*.java"
+	exclude "**/TestClass*.java"
 	rule file("codeformat/HEADER")
 }
 
