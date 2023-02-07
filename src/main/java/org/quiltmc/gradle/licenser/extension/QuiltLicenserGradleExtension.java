@@ -88,11 +88,7 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 
 				// Manifest
 				"**/MANIFEST.MF",
-				"**/META-INF/services/**",
-
-				// @TODO remove once supported
-				"**/package-info.java",
-				"**/module-info.java"
+				"**/META-INF/services/**"
 		);
 	}
 
@@ -205,6 +201,7 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 	 *
 	 * @param sourceSet the source set
 	 * @return {@code this}
+	 * @since 1.2.0
 	 */
 	public @NotNull QuiltLicenserGradleExtension exclude(@NotNull SourceSet sourceSet) {
 		this.excludedSourceSets.add(sourceSet);
@@ -215,6 +212,7 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 	 * {@return {@code true} if the source set is excluded, or {@code false} otherwise}
 	 *
 	 * @param sourceSet the source set to check
+	 * @since 1.2.0
 	 */
 	public boolean isSourceSetExcluded(@NotNull SourceSet sourceSet) {
 		return this.excludedSourceSets.contains(sourceSet);

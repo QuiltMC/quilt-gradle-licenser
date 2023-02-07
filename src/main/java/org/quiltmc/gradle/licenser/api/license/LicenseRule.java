@@ -20,6 +20,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.gradle.licenser.QuiltLicenserGradlePlugin;
+import org.quiltmc.gradle.licenser.api.license.comment.JavaLicenseComment;
 import org.quiltmc.gradle.licenser.impl.LicenseUtils;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
  * Represents a license header rule, it describes one valid license header format.
  *
  * @author LambdAurora
- * @version 1.1.1
+ * @version 1.2.0
  * @since 1.0.0
  */
 public class LicenseRule {
@@ -113,62 +114,44 @@ public class LicenseRule {
 			project.getLogger().lifecycle("  => Selected \"{}\" as the year string.", year);
 		}
 
-		int delimiter = source.indexOf("package");
-		if (delimiter != -1) {
-			// @TODO have a way to specify custom variables?
-			var map = new HashMap<String, String>();
-			map.put(LicenseHeader.YEAR_KEY, year);
-			var newSource = this.getLicenseString(map) + source.substring(delimiter);
+		var result = JavaLicenseComment.JAVA.findLicenseComment(source);
 
-			if (newSource.equals(source)) {
-				return false;
-			}
+		// @TODO have a way to specify custom variables?
+		var map = new HashMap<String, String>();
+		map.put(LicenseHeader.YEAR_KEY, year);
+		var newSource = this.getLicenseString(map) + source.substring(result.endIndex());
 
-			var backupPath = LicenseUtils.getBackupPath(project, rootPath, path);
-
-			if (backupPath == null) {
-				throw new GradleException("Cannot backup file " + path + ", abandoning formatting.");
-			}
-
-			try {
-				if (!Files.isDirectory(backupPath.getParent())) {
-					Files.createDirectories(backupPath.getParent());
-				}
-
-				Files.copy(path, backupPath, StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				throw new GradleException("Cannot backup file " + path + ", abandoning formatting.", e);
-			}
-
-			try {
-				Files.writeString(path, newSource);
-			} catch (IOException e) {
-				throw new GradleException("Failed to write updated file " + path + ", abandoning formatting.", e);
-			}
-
-			return true;
+		if (newSource.equals(source)) {
+			return false;
 		}
 
-		return false;
+		var backupPath = LicenseUtils.getBackupPath(project, rootPath, path);
+
+		if (backupPath == null) {
+			throw new GradleException("Cannot backup file " + path + ", abandoning formatting.");
+		}
+
+		try {
+			if (!Files.isDirectory(backupPath.getParent())) {
+				Files.createDirectories(backupPath.getParent());
+			}
+
+			Files.copy(path, backupPath, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			throw new GradleException("Cannot backup file " + path + ", abandoning formatting.", e);
+		}
+
+		try {
+			Files.writeString(path, newSource);
+		} catch (IOException e) {
+			throw new GradleException("Failed to write updated file " + path + ", abandoning formatting.", e);
+		}
+
+		return true;
 	}
 
 	private String getLicenseString(Map<String, String> variables) {
-		var builder = new StringBuilder();
-
-		var lines = this.headerFormat.getHeaderLines(variables);
-
-		builder.append("/*").append(this.headerFormat.getLineSeparator());
-		for (var line : lines) {
-			if (line.isEmpty()) {
-				builder.append(" *").append(this.headerFormat.getLineSeparator());
-			} else {
-				builder.append(" * ").append(line).append(this.headerFormat.getLineSeparator());
-			}
-		}
-
-		builder.append(" */").append(this.headerFormat.getLineSeparator()).append(this.headerFormat.getLineSeparator());
-
-		return builder.toString();
+		return JavaLicenseComment.JAVA.getLicenseComment(this.headerFormat.getHeaderLines(variables), this.headerFormat.getLineSeparator());
 	}
 
 	private String getYearString(Project project, Path sourcePath, String source) {
