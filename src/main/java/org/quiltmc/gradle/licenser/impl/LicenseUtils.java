@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.gradle.licenser.api.license.HeaderFormat;
 import org.quiltmc.gradle.licenser.api.license.LicenseHeader;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -162,13 +161,19 @@ public class LicenseUtils {
 	}
 
 	public static @Nullable Path getBackupPath(Project project, Path rootPath, Path path) {
-		var backupDir = new File(project.getBuildDir(), "quilt/licenser");
-		backupDir.mkdirs();
+		Path backupDir = project.getBuildDir().toPath().resolve("quilt/licenser");
+
+		try {
+			Files.createDirectories(backupDir);
+		} catch (IOException e) {
+			return null;
+		}
+
 		var pathAsString = path.toAbsolutePath().toString();
 		var rootPathAsString = rootPath.toString();
 
 		if (pathAsString.startsWith(rootPathAsString)) {
-			return backupDir.toPath().resolve(Paths.get(pathAsString.substring(rootPathAsString.length() + 1)))
+			return backupDir.resolve(Paths.get(pathAsString.substring(rootPathAsString.length() + 1)))
 					.normalize();
 		}
 

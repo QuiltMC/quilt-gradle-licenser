@@ -3,7 +3,16 @@ plugins {
 	id 'java'
 }
 
+sourceSets {
+	custom {
+		java {
+			srcDir "src/custom/java"
+		}
+	}
+}
+
 license {
 	rule rootProject.file("HEADER")
 	include "**/*.java"
+	exclude sourceSets.custom
 }

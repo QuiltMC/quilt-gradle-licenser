@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ class QuiltGradleLicenserPluginFunctionalTest {
 	void canRunTask() throws IOException {
 		this.writeString(this.getSettingsFile(), "");
 		copy("build.gradle");
+		copy("src/custom/java/test/TestClass2.java");
 		Path testClassPath = copy("src/main/java/test/TestClass.java");
 
 		Files.copy(Paths.get("codeformat", "HEADER"), this.path("HEADER"));
@@ -75,6 +76,7 @@ class QuiltGradleLicenserPluginFunctionalTest {
 		// Verify the result
 		assertTrue(result.getOutput().contains("- Updated file " + testClassPath), "Missing updated file string in output log.");
 		assertTrue(result.getOutput().contains("Updated 1 out of 1 files."), "Missing update status string in output log.");
+		assertTrue(result.getOutput().contains("> Task :applyLicenseCustom SKIPPED"), "custom source set should be skipped.");
 
 		assertTrue(Files.readString(testClassPath).contains("Licensed under the Apache License, Version 2.0 (the \"License\");"));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,10 +51,14 @@ public class QuiltLicenserGradlePlugin implements Plugin<Project> {
 		project.getPlugins().withType(JavaBasePlugin.class).configureEach(plugin -> {
 			var sourceSets = (SourceSetContainer) project.getExtensions().getByName("sourceSets");
 
-			sourceSets.all(sourceSet -> {
-				project.getTasks().register(this.getTaskName("check", sourceSet), CheckLicenseTask.class, sourceSet, ext).getName();
-				project.getTasks().register(this.getTaskName("apply", sourceSet), ApplyLicenseTask.class, sourceSet, ext);
-			});
+			sourceSets
+					.matching(sourceSet -> !ext.isSourceSetExcluded(sourceSet))
+					.all(sourceSet -> {
+						project.getTasks().register(getTaskName("check", sourceSet), CheckLicenseTask.class, sourceSet, ext)
+								.configure(task -> task.onlyIf(t -> !ext.isSourceSetExcluded(sourceSet)));
+						project.getTasks().register(getTaskName("apply", sourceSet), ApplyLicenseTask.class, sourceSet, ext)
+								.configure(task -> task.onlyIf(t -> !ext.isSourceSetExcluded(sourceSet)));
+					});
 		});
 
 		var globalCheck = this.registerGroupedTask(project, CHECK_TASK_PREFIX, task -> {
@@ -77,7 +81,7 @@ public class QuiltLicenserGradlePlugin implements Plugin<Project> {
 		});
 	}
 
-	private String getTaskName(String action, SourceSet sourceSet) {
+	public static String getTaskName(String action, SourceSet sourceSet) {
 		if (sourceSet.getName().equals("main")) {
 			return action + LICENSE_TASK_SUFFIX + "Main";
 		}

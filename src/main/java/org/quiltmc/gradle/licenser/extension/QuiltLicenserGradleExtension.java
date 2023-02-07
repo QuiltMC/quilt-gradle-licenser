@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 import org.gradle.api.resources.TextResourceFactory;
 import org.gradle.api.specs.Spec;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.util.PatternFilterable;
 import org.gradle.api.tasks.util.PatternSet;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +36,14 @@ import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class QuiltLicenserGradleExtension implements PatternFilterable {
 	/**
 	 * The filter to apply to the source files.
 	 * <p>
-	 * By default this only includes a few excludes for binary files or files without standardized comment formats.
+	 * By default, this only includes a few excludes for binary files or files without standardized comment formats.
 	 */
 	@Delegate
 	public PatternFilterable patternFilterable;
@@ -53,6 +55,9 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 
 	@PackageScope
 	Property<Boolean> buildDependCheck;
+
+	@PackageScope
+	final List<SourceSet> excludedSourceSets = new ArrayList<>();
 
 	@Inject
 	public QuiltLicenserGradleExtension(final ObjectFactory objects, final Project project) {
@@ -193,5 +198,25 @@ public class QuiltLicenserGradleExtension implements PatternFilterable {
 	public @NotNull QuiltLicenserGradleExtension exclude(@NotNull Closure closure) {
 		this.patternFilterable.exclude(closure);
 		return this;
+	}
+
+	/**
+	 * Excludes an entire source set.
+	 *
+	 * @param sourceSet the source set
+	 * @return {@code this}
+	 */
+	public @NotNull QuiltLicenserGradleExtension exclude(@NotNull SourceSet sourceSet) {
+		this.excludedSourceSets.add(sourceSet);
+		return this;
+	}
+
+	/**
+	 * {@return {@code true} if the source set is excluded, or {@code false} otherwise}
+	 *
+	 * @param sourceSet the source set to check
+	 */
+	public boolean isSourceSetExcluded(@NotNull SourceSet sourceSet) {
+		return this.excludedSourceSets.contains(sourceSet);
 	}
 }

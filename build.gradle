@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.quiltmc"
-version = "1.1.2"
+version = "1.2.0"
 def javaVersion = 17
 
 repositories {
@@ -45,6 +45,7 @@ tasks.withType(JavaCompile).configureEach {
 
 license {
 	include "**/*.java"
+	exclude "src/**"
 	rule file("codeformat/HEADER")
 }
 
