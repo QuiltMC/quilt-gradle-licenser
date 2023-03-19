@@ -31,6 +31,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
@@ -76,6 +77,10 @@ public final class GitUtils {
 	public static @Nullable RevCommit getLatestCommit(Git git, Path path) {
 		try {
 			var pathStr = path.toString();
+
+			if (!File.separator.equals("/")) {
+				pathStr = pathStr.replace(File.separator, "/");
+			}
 
 			var log = git.log();
 
