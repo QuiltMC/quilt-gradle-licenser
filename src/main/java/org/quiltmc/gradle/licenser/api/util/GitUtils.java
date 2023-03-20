@@ -31,6 +31,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
@@ -38,6 +39,16 @@ import java.util.*;
 public final class GitUtils {
 	private GitUtils() {
 		throw new UnsupportedOperationException("GitUtils only contains static definitions.");
+	}
+
+	private static String standardizePath(Path path) {
+		var pathStr = path.toString();
+
+		if (!File.separator.equals("/")) {
+			pathStr = pathStr.replace(File.separator, "/");
+		}
+
+		return pathStr;
 	}
 
 	private static Git openGit(Project project) throws IOException {
@@ -75,12 +86,12 @@ public final class GitUtils {
 	 */
 	public static @Nullable RevCommit getLatestCommit(Git git, Path path) {
 		try {
-			var pathStr = path.toString();
+			var pathStr = standardizePath(path);
 
 			var log = git.log();
 
 			if (!pathStr.isEmpty()) {
-				log.addPath(path.toString());
+				log.addPath(pathStr);
 			}
 
 			Iterator<RevCommit> iterator = log
@@ -123,7 +134,7 @@ public final class GitUtils {
 		try (var git = openGit(project)) {
 			Path repoRoot = getRepoRoot(git);
 			path = repoRoot.relativize(path);
-			var pathString = path.toString();
+			var pathString = standardizePath(path);
 
 			var formatter = new DiffFormatter(System.out);
 			formatter.setRepository(git.getRepository());
