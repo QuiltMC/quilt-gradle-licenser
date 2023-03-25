@@ -19,7 +19,6 @@ package org.quiltmc.gradle.licenser.api.license;
 import org.eclipse.jgit.util.IntList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,7 +26,7 @@ import java.util.stream.IntStream;
  * Represents how a year value should be represented in the license file.
  *
  * @author LambdAurora
- * @version 1.0.0
+ * @version 2.0.0
  * @since 1.0.0
  */
 public enum LicenseYearDisplayMode {
@@ -55,10 +54,10 @@ public enum LicenseYearDisplayMode {
 					.collect(Collectors.joining(", "));
 		}
 	},
-	LATEST_ONLY {
+	CREATION_ONLY {
 		@Override
 		protected String getYearString(IntList years) {
-			return String.valueOf(years.get(years.size() - 1));
+			return String.valueOf(years.get(0));
 		}
 	};
 

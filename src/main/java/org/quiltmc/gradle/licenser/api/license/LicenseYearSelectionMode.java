@@ -26,7 +26,7 @@ import java.nio.file.Path;
  * Represents the mode in which the year should be fetched.
  *
  * @author LambdAurora
- * @version 1.0.0
+ * @version 2.0.0
  * @since 1.0.0
  */
 public enum LicenseYearSelectionMode {
@@ -54,7 +54,7 @@ public enum LicenseYearSelectionMode {
 	 * @param path the path to the file
 	 * @return the last modification year
 	 */
-	public int getYear(Project project, Path path) {
+	public int getModificationYear(Project project, Path path) {
 		Path commitPath = this.commitPathReference.getPathForCommitFetching(project, path);
 		return GitUtils.getModificationYear(project, commitPath);
 	}

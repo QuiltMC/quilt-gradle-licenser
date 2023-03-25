@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * Represents a license header rule, it describes one valid license header format.
  *
  * @author LambdAurora
- * @version 1.2.0
+ * @version 2.0.0
  * @since 1.0.0
  */
 public class LicenseRule {
@@ -47,7 +47,7 @@ public class LicenseRule {
 	private final LicenseYearSelectionMode yearSelectionMode;
 
 	public LicenseRule(String headerFormat) {
-		this(headerFormat, LicenseYearDisplayMode.LATEST_ONLY, LicenseYearSelectionMode.PROJECT);
+		this(headerFormat, LicenseYearDisplayMode.CREATION_ONLY, LicenseYearSelectionMode.PROJECT);
 	}
 
 	public LicenseRule(String headerFormat, LicenseYearDisplayMode yearDisplayMode, LicenseYearSelectionMode yearSelectionMode) {
@@ -155,7 +155,7 @@ public class LicenseRule {
 	}
 
 	private String getYearString(Project project, Path sourcePath, String source) {
-		int lastModifiedYear = this.yearSelectionMode.getYear(project, sourcePath);
+		int lastModifiedYear = this.yearSelectionMode.getModificationYear(project, sourcePath);
 		var matcher = this.validator.matcher(source);
 
 		if (QuiltLicenserGradlePlugin.DEBUG_MODE) {

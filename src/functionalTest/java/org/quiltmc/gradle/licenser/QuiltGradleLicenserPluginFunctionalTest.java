@@ -63,12 +63,11 @@ class QuiltGradleLicenserPluginFunctionalTest {
 	void canRunTask() throws IOException {
 		this.writeString(this.getSettingsFile(), "");
 		copy("build.gradle");
+		copy("HEADER");
 		copy("src/custom/java/test/TestClass2.java");
 		Path testClassPath = copy("src/main/java/test/TestClass.java");
 		Path testPackageInfoPath = copy("src/main/java/test/package-info.java");
 		Path testKotlinPath = copy("src/main/kotlin/test/TestKotlinFile.kt");
-
-		Files.copy(Paths.get("codeformat", "HEADER"), this.path("HEADER"));
 
 		// Run the build
 		var runner = GradleRunner.create();

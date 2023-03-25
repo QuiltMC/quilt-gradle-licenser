@@ -86,10 +86,10 @@ Currently, only the `${YEAR}` variable is available.
    Each declaration of `match_from` is added to the global regex with an OR relation.
    The regular expression only match against the beginning of the file.
  - `year_display`  
-   Default value: `latest_only`  
+   Default value: `creation_only`  
    Describes how the year variable should look like.  
    Available values are:
-   - `latest_only` for only the last modification year,
+   - `creation_only` for only the year of creation,
    - `list` for a list of years,
    - `lenient_range` for a range between the absolute minimum year and last modification year
  - `year_selection`  
