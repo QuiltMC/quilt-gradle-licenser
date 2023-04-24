@@ -14,19 +14,7 @@ plugins {
 }
 ```
 
-The following mavens also need to be added to your `settings.gradle` for resolution:
-
-```groovy
-pluginManagement {
-	repositories {
-		mavenCentral()
-		maven {
-			name 'Quilt'
-			url 'https://maven.quiltmc.org/repository/release'
-		}
-	}
-}
-```
+Quilt Gradle Licenser is available on the Gradle Plugin Portal or the Quilt Maven.
 
 ### Tasks
 
