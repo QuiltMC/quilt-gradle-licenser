@@ -1,11 +1,11 @@
 plugins {
 	id 'com.gradle.plugin-publish' version '1.2.0'
 	id 'maven-publish'
-	id 'org.quiltmc.gradle.licenser' version '1.1.+'
+	id 'org.quiltmc.gradle.licenser' version '2.0.+'
 }
 
 group = "org.quiltmc"
-version = "2.0.1"
+version = "2.0.2"
 def javaVersion = 17
 
 repositories {
@@ -28,7 +28,7 @@ gradlePlugin {
 		quilt_gradle_licenser {
 			id = 'org.quiltmc.gradle.licenser'
 			displayName = "Quilt Gradle Licenser"
-			description = "A plugin to automatically manage license headers, designed to easily support different headers for different files."
+			description = "A plugin to automatically manage license headers, designed to easily support different headers for different files. This plugin is deprecated, please use dev.yumi.gradle.licenser instead."
 			tags.addAll('licenser', 'licensing', 'licenses', 'license-header')
 			implementationClass = 'org.quiltmc.gradle.licenser.QuiltLicenserGradlePlugin'
 		}

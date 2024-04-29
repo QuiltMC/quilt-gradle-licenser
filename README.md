@@ -4,13 +4,62 @@ A license header manager for Gradle.
 
 Its goal is to ensure that the source files contains a predefined license header determined by some rules, and optionally generate them automatically with a Gradle task.
 
+## Depreciation Notice
+
+Since October 2023, the Quilt Licenser Gradle plugin is deprecated.  
+This plugin suffers from critical design flaws which leads to some OS-specific
+bugs and to a low ability to expand the plugin further in the future.
+
+To remedy those issues a rewrite was needed and the original author of this plugin
+has done such rewrite under a separate organization.
+The replacement plugin is the [Yumi Gradle Licenser Plugin].
+
+### Migration
+
+For those who wish to continue to use this kind of license header management plugin,
+the [Yumi Gradle Licenser Plugin] can be used as the replacement.
+
+That replacement plugin fixes some issues with this one:
+- Windows-specific license header detection issues are fixed.
+- Date-detection issues are fixed.
+- Kotlin is properly supported.
+
+For most cases the migration is a matter of a few line changes.
+
+In buildscripts the plugin identifier needs to be changed:
+```diff
+-	id 'org.quiltmc.gradle.licenser' version '2.+'
++	id 'dev.yumi.gradle.licenser' version '1.1.+'
+```
+
+The `license` block in buildscripts does not require any change.
+
+The format for license header files change significantly,
+the full documentation can be found [here](https://github.com/YumiProject/yumi-gradle-licenser/blob/main/README.md#license-header-rule).
+
+Changes include:
+- Replace the `${YEAR}` variable with `${CREATION_YEAR}`.
+- Addition of the `${FILE_NAME}` variable.
+- Metadata statements prefixed with `;;` are replaced with pre-processor statements prefixed with `#`:
+  - the `year_selection` statement is the same;
+  - the `year_display` statement no longer exists,
+    but similar behavior can be achieved through the use of `type` statements:
+    ```diff
+    - ;;year_display: list
+    + #type YEAR YEAR_LIST
+    ```
+    Please note that the `type` statement defines a new variable.
+  - the `match_from` statement does not currently have an equivalent,
+    but should not be an issue in most cases and only influenced initial runs of the `applyLicenses` task;
+  - a new kind of statement is available: `optional`, this allows to add optional parts to license headers.
+
 ## Usage
 
 For a project you need to apply the plugin to your project:
 
 ```groovy
 plugins {
-	id 'org.quiltmc.gradle.licenser' version '1.+'
+	id 'org.quiltmc.gradle.licenser' version '2.+'
 }
 ```
 
@@ -87,3 +136,5 @@ Currently, only the `${YEAR}` variable is available.
    Available values are:
    - `project` for which the project is used as reference,
    - `file` for which each file can have its own last modification year
+
+[Yumi Gradle Licenser Plugin]: https://github.com/YumiProject/yumi-gradle-licenser "The Git repository of the Yumi Gradle Licenser Plugin"

@@ -47,6 +47,9 @@ public class QuiltLicenserGradlePlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		var ext = project.getExtensions().create("license", QuiltLicenserGradleExtension.class, project);
 
+		project.getLogger()
+				.warn("The Quilt Gradle Licenser Plugin is deprecated. Please migrate to the Yumi Gradle Licenser plugin: https://github.com/QuiltMC/quilt-gradle-licenser#migration");
+
 		// Register tasks
 		project.getPlugins().withType(JavaBasePlugin.class).configureEach(plugin -> {
 			var sourceSets = (SourceSetContainer) project.getExtensions().getByName("sourceSets");
